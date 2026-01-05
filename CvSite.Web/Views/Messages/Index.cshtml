@@ -1,0 +1,37 @@
+﻿@model IEnumerable<CvSite.Web.Models.Message>
+
+<h2>Messages</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model)
+        {
+            <tr class="@(message.IsRead ? "" : "table-warning")">
+                <td>@message.Subject</td>
+                <td>@message.SentAt.ToShortDateString()</td>
+                <td>
+                    @(message.IsRead ? "Read" : "Unread")
+                </td>
+                <td>
+                    @if (!message.IsRead)
+                    {
+                        <form asp-action="MarkAsRead" method="post">
+                            <input type="hidden" name="id" value="@message.Id" />
+                            <button class="btn btn-sm btn-primary">
+                                Mark as read
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
