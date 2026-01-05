@@ -10,8 +10,9 @@ namespace CvSite.Web.Data.Entities
         [MaxLength(100, ErrorMessage = "The Name field cannot exceed 100 characters.")]
         public string Name { get; set; } = string.Empty;
 
-       
+        [Required]
         public string ApplicationUserId { get; set; } = string.Empty;
         public ApplicationUser ApplicationUser { get; set; } = null!;
     }
 }
+
