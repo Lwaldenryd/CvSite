@@ -1,0 +1,13 @@
+﻿using CvSite.Web.Data.Entities;
+
+namespace CvSite.Web.Models
+{
+    public class CvViewModel
+    {
+        public ApplicationUser User { get; set; } = null!;
+        public List<Competence> Competences { get; set; } = new();
+        public List<Education> Educations { get; set; } = new();
+        public List<Experience> Experiences { get; set; } = new();
+        // Här lägger du även till projekt senare [cite: 77]
+    }
+}

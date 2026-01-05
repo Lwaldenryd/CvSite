@@ -1,54 +1,48 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CvSite.Web.Data;
+using CvSite.Web.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CvSite.Web.Data;
-using CvSite.Web.Data.Entities;
-
-
 
 namespace CvSite.Web.Controllers
 {
     [Authorize]
-    public class CompetencesController : Controller
+    public class ExperiencesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public CompetencesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ExperiencesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
+
+
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
 
-            var competences = await _context.Competences
+            var experiences = await _context.Experiences
                 .Where(c => c.ApplicationUserId == userId)
                 .ToListAsync();
 
-            return View(competences);
+            return View(experiences);
         }
 
         public IActionResult Create()
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Competence competence)
+        public async Task<IActionResult> Create([Bind("Company,Role,Description,StartDate,EndDate")] Experience experiences)
         {
-            // 1. Hämta nuvarande användar-ID 
             var currentUserId = _userManager.GetUserId(User);
+            experiences.ApplicationUserId = currentUserId!;
 
-            if (currentUserId == null) return Challenge();
-
-            // 2. Tilldela ID:t manuellt
-            competence.ApplicationUserId = currentUserId;
-
-            // 3. TA BORT valideringsfel för fält vi sätter manuellt
+            // Rensa validering för navigeringsegenskaper
             ModelState.Remove("ApplicationUserId");
             ModelState.Remove("ApplicationUser");
 
@@ -56,17 +50,17 @@ namespace CvSite.Web.Controllers
             {
                 try
                 {
-                    _context.Add(competence);
+                    _context.Add(experiences);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "experiences"); // Eller din CV-sida
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                   
-                    ModelState.AddModelError("", "Ett tekniskt fel uppstod när kompetensen skulle sparas.");
+                    
+                    ModelState.AddModelError("", "Kunde inte spara erfarenheten på grund av ett databasfel.");
                 }
             }
-            return View(competence);
+            return View(experiences);
         }
     }
 }

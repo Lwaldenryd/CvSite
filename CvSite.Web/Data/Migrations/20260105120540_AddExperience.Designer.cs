@@ -4,6 +4,7 @@ using CvSite.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CvSite.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260105120540_AddExperience")]
+    partial class AddExperience
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +33,6 @@ namespace CvSite.Web.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -45,15 +44,7 @@ namespace CvSite.Web.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
+                    b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -79,9 +70,6 @@ namespace CvSite.Web.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -91,6 +79,9 @@ namespace CvSite.Web.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("publicProfile")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -343,7 +334,7 @@ namespace CvSite.Web.Data.Migrations
             modelBuilder.Entity("CvSite.Web.Data.Entities.Competence", b =>
                 {
                     b.HasOne("CvSite.Web.Data.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("Competences")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -354,7 +345,7 @@ namespace CvSite.Web.Data.Migrations
             modelBuilder.Entity("CvSite.Web.Data.Entities.Education", b =>
                 {
                     b.HasOne("CvSite.Web.Data.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("Educations")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -365,7 +356,7 @@ namespace CvSite.Web.Data.Migrations
             modelBuilder.Entity("CvSite.Web.Data.Entities.Experience", b =>
                 {
                     b.HasOne("CvSite.Web.Data.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("Experiences")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -422,15 +413,6 @@ namespace CvSite.Web.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CvSite.Web.Data.Entities.ApplicationUser", b =>
-                {
-                    b.Navigation("Competences");
-
-                    b.Navigation("Educations");
-
-                    b.Navigation("Experiences");
                 });
 #pragma warning restore 612, 618
         }
