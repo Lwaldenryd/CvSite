@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using CvSite.Web.Data.Entities;
+using CvSite.Web.Models;
 
 namespace CvSite.Web.Data
 {
@@ -17,5 +18,6 @@ namespace CvSite.Web.Data
 
         public DbSet<Education> Educations { get; set; }
         public DbSet<Experience> Experiences { get; set; }
+        public DbSet<Message> Messages { get; set; }
     }
 }
