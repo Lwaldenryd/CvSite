@@ -1,0 +1,88 @@
+﻿@model CvSite.Web.Models.CvViewModel
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<CvSite.Web.Data.Entities.ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "CV Detaljer";
+}
+
+<div class="container mt-5">
+    <div class="p-4 mb-4 bg-white border border-primary rounded shadow-sm" style="border-width: 2px !important;">
+        <h5 class="mb-3 fw-bold text-primary">Hantera ditt CV</h5>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-controller="Cv" asp-action="Edit" class="btn btn-primary shadow-sm">Redigera Profil</a>
+            <a asp-controller="Competences" asp-action="Create" class="btn btn-success shadow-sm">+ Kompetens</a>
+            <a asp-controller="Educations" asp-action="Create" class="btn btn-success shadow-sm">+ Utbildning</a>
+            <a asp-controller="Experiences" asp-action="Create" class="btn btn-success shadow-sm">+ Erfarenhet</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm border-0 bg-light">
+                @if (Model.User.ProfilePicture != null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.User.ProfilePicture)"
+                         class="img-fluid rounded-circle mb-3 mx-auto d-block shadow"
+                         style="width: 180px; height: 180px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mb-3 mx-auto shadow"
+                         style="width: 180px; height: 180px;">
+                        <i class="bi bi-person-fill" style="font-size: 5rem;">👤</i>
+                    </div>
+                }
+
+                <h2 class="text-center fw-bold">@(string.IsNullOrEmpty(Model.User.FirstName) ? "Namn ej angivet" : Model.User.FirstName + " " + Model.User.LastName)</h2>
+                <hr />
+                <p><strong>Adress:</strong><br /> @(string.IsNullOrEmpty(Model.User.Address) ? "Ej angiven" : Model.User.Address)</p>
+                <p><strong>Email:</strong><br /> @Model.User.Email</p>
+            </div>
+        </div>
+
+        <div class="col-md-8 ps-md-5">
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Kompetenser</h3>
+            <div class="mb-5">
+                @if (!Model.Competences.Any())
+                {
+                    <span class="text-muted italic">Inga kompetenser tillagda ännu.</span>
+                }
+                @foreach (var comp in Model.Competences)
+                {
+                    <span class="badge bg-info text-dark p-2 px-3 me-2 mb-2 shadow-sm" style="font-size: 0.9rem;">@comp.Name</span>
+                }
+            </div>
+
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Utbildning</h3>
+            <div class="mb-5">
+                @if (!Model.Educations.Any())
+                {
+                    <p class="text-muted italic">Ingen utbildning tillagd.</p>
+                }
+                @foreach (var edu in Model.Educations)
+                {
+                    <div class="mb-3 border-start border-4 border-success ps-3">
+                        <h5 class="mb-0 fw-bold">@edu.Subject</h5>
+                        <div class="text-muted">@edu.Institution</div>
+                    </div>
+                }
+            </div>
+
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Erfarenhet</h3>
+            <div>
+                @if (!Model.Experiences.Any())
+                {
+                    <p class="text-muted italic">Ingen erfarenhet tillagd.</p>
+                }
+                @foreach (var exp in Model.Experiences)
+                {
+                    <div class="mb-3 border-start border-4 border-primary ps-3">
+                        <h5 class="mb-0 fw-bold">@exp.Role</h5>
+                        <div class="text-primary fw-bold">@exp.Company</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

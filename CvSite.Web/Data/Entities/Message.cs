@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CvSite.Web.Models
+namespace CvSite.Web.Data.Entities
 {
     public class Message
     {

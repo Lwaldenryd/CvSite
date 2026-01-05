@@ -55,7 +55,7 @@ namespace CvSite.Web.Controllers
                     _context.Add(education);
                     await _context.SaveChangesAsync();
                     
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("index", "Home");
                 }
                 catch (Exception)
                 {

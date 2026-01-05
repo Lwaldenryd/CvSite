@@ -1,0 +1,31 @@
+﻿@model IEnumerable<CvSite.Web.Data.Entities.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Sök CV";
+}
+
+<h1>Alla CV-profiler</h1>
+
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="searchString" class="form-control" placeholder="Sök på namn eller kompetens...">
+        <button class="btn btn-primary" type="submit">Sök</button>
+    </div>
+</form>
+
+<div class="row">
+    @foreach (var user in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@user.FirstName @user.LastName</h5>
+                    <p class="card-text text-muted">@user.Address</p>
+
+                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-primary">Visa fullständigt CV</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

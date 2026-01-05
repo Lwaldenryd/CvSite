@@ -42,7 +42,7 @@ namespace CvSite.Web.Controllers
             var currentUserId = _userManager.GetUserId(User);
             experiences.ApplicationUserId = currentUserId!;
 
-            // Rensa validering för navigeringsegenskaper
+           
             ModelState.Remove("ApplicationUserId");
             ModelState.Remove("ApplicationUser");
 
@@ -52,7 +52,7 @@ namespace CvSite.Web.Controllers
                 {
                     _context.Add(experiences);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index", "experiences"); // Eller din CV-sida
+                    return RedirectToAction("index", "Home"); 
                 }
                 catch (Exception)
                 {
