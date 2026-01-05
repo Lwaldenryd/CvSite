@@ -14,6 +14,10 @@ namespace CvSite.Web.Data
 
         public DbSet<Competence> Competences { get; set; } = null!;
 
+
+
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<Experience> Experiences { get; set; }
         public DbSet<Message> Messages { get; set; }
     }
 }

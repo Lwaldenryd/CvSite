@@ -5,30 +5,29 @@ using Microsoft.EntityFrameworkCore;
 using CvSite.Web.Data;
 using CvSite.Web.Data.Entities;
 
-
-
 namespace CvSite.Web.Controllers
 {
     [Authorize]
-    public class CompetencesController : Controller
+    public class EducationsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public CompetencesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public EducationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
+
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
 
-            var competences = await _context.Competences
+            var Educations = await _context.Educations
                 .Where(c => c.ApplicationUserId == userId)
                 .ToListAsync();
 
-            return View(competences);
+            return View(Educations);
         }
 
         public IActionResult Create()
@@ -38,17 +37,14 @@ namespace CvSite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Competence competence)
+        public async Task<IActionResult> Create([Bind("Institution,Subject,StartDate,EndDate")] Education education)
         {
-            // 1. Hämta nuvarande användar-ID 
             var currentUserId = _userManager.GetUserId(User);
-
             if (currentUserId == null) return Challenge();
 
-            // 2. Tilldela ID:t manuellt
-            competence.ApplicationUserId = currentUserId;
+            education.ApplicationUserId = currentUserId;
 
-            // 3. TA BORT valideringsfel för fält vi sätter manuellt
+            
             ModelState.Remove("ApplicationUserId");
             ModelState.Remove("ApplicationUser");
 
@@ -56,17 +52,17 @@ namespace CvSite.Web.Controllers
             {
                 try
                 {
-                    _context.Add(competence);
+                    _context.Add(education);
                     await _context.SaveChangesAsync();
+                    
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                   
-                    ModelState.AddModelError("", "Ett tekniskt fel uppstod när kompetensen skulle sparas.");
-                }
+                    ModelState.AddModelError("", "Ett tekniskt fel uppstod när utbildningen skulle sparas.");
             }
-            return View(competence);
+            }
+            return View(education);
         }
     }
 }

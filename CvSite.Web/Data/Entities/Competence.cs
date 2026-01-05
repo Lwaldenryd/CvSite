@@ -12,7 +12,7 @@ namespace CvSite.Web.Data.Entities
 
         [Required]
         public string ApplicationUserId { get; set; } = string.Empty;
-        public ApplicationUser ApplicationUser { get; set; } = null!;
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }
 
