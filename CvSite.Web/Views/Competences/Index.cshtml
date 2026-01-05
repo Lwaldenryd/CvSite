@@ -1,0 +1,24 @@
+﻿@model IEnumerable<CvSite.Web.Data.Entities.Competence>
+
+<h2>My competences</h2>
+
+<p>
+    <a asp-action="Create">Add new competence</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
