@@ -42,6 +42,13 @@ namespace CvSite.Web.Controllers
 
             var user = await _userManager.GetUserAsync(User);
 
+            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+            {
+                using var memoryStream = new MemoryStream();
+                await model.ProfileImage.CopyToAsync(memoryStream);
+                user.ProfilePicture = memoryStream.ToArray();
+            } 
+            
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Address = model.Address;
