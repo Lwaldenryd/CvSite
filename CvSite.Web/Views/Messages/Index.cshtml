@@ -1,11 +1,18 @@
 ﻿@using CvSite.Web.Data.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 @model IEnumerable<Message>
+
+@{
+    var currentUserId = UserManager.GetUserId(User);
+}
 
 <h2>Messages</h2>
 
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>Person</th>
             <th>Subject</th>
             <th>Date</th>
             <th>Status</th>
@@ -16,21 +23,33 @@
         @foreach (var message in Model)
         {
             <tr class="@(message.IsRead ? "" : "table-warning")">
+                <td>
+                    @if (message.SenderId == currentUserId)
+                    {
+                        <span class="badge bg-secondary">Till:</span> 
+                        @message.Receiver?.FirstName @message.Receiver?.LastName
+                    }
+                    else
+                    {
+                        <span class="badge bg-primary">Från:</span> 
+                        @message.Sender?.FirstName @message.Sender?.LastName
+                    }
+                </td>
                 <td>@message.Subject</td>
                 <td>@message.SentAt.ToShortDateString()</td>
+                <td>@(message.IsRead ? "Read" : "Unread")</td>
                 <td>
-                    @(message.IsRead ? "Read" : "Unread")
-                </td>
-                <td>
-                    @if (!message.IsRead)
-                    {
-                        <form asp-action="MarkAsRead" method="post">
-                            <input type="hidden" name="id" value="@message.Id" />
-                            <button class="btn btn-sm btn-primary">
-                                Mark as read
-                            </button>
-                        </form>
-                    }
+                    <div class="d-flex gap-2">
+                        <a asp-action="Details" asp-route-id="@message.Id" class="btn btn-sm btn-info text-white">View</a>
+
+                        @if (!message.IsRead && message.ReceiverId == currentUserId)
+                        {
+                            <form asp-action="MarkAsRead" method="post">
+                                <input type="hidden" name="id" value="@message.Id" />
+                                <button class="btn btn-sm btn-primary">Mark as read</button>
+                            </form>
+                        }
+                    </div>
                 </td>
             </tr>
         }
