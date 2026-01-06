@@ -1,0 +1,33 @@
+﻿@model CvSite.Web.Data.Entities.Message
+
+@{
+    ViewData["Title"] = "Läs meddelande";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h4 class="mb-0">@Model.Subject</h4>
+            <span>@Model.SentAt.ToString("g")</span>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <strong>Från:</strong> @Model.Sender?.FirstName @Model.Sender?.LastName <br />
+                <strong>Till:</strong> @Model.Receiver?.FirstName @Model.Receiver?.LastName
+            </div>
+            <hr />
+            <div class="message-content p-3 bg-light rounded" style="white-space: pre-wrap;">
+                @Model.Content
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Index" class="btn btn-secondary">Tillbaka till inkorgen</a>
+
+            @* Om du är mottagaren, visa en Svara-knapp *@
+            @if (Model.ReceiverId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+            {
+                <a asp-action="Send" asp-route-receiverId="@Model.SenderId" class="btn btn-success">Svara</a>
+            }
+        </div>
+    </div>
+</div>

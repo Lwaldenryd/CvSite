@@ -1,0 +1,24 @@
+﻿@model CvSite.Web.Data.Entities.Message
+
+<div class="container mt-5">
+    <h2>Skicka meddelande till @ViewBag.ReceiverName</h2>
+
+    <form asp-action="Send" method="post" class="mt-4">
+        <input type="hidden" asp-for="ReceiverId" />
+
+        <div class="mb-3">
+            <label asp-for="Subject" class="form-label">Ämne</label>
+            <input asp-for="Subject" class="form-control" placeholder="Vad gäller det?" />
+            <span asp-validation-for="Subject" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Content" class="form-label">Meddelande</label>
+            <textarea asp-for="Content" class="form-control" rows="5" placeholder="Skriv ditt meddelande här..."></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Skicka</button>
+        <a asp-controller="Cv" asp-action="Index" class="btn btn-secondary">Avbryt</a>
+    </form>
+</div>
