@@ -17,7 +17,5 @@ namespace CvSite.Web.Models
 
         [Display(Name = "Private profile")]
         public bool IsPrivate { get; set; }
-
-        public IFormFile ProfileImage { get; set; }
     }
 }

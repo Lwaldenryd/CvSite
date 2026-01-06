@@ -39,7 +39,7 @@ namespace CvSite.Web.Controllers
             {
                 return View(model);
             }
-                
+
             var user = await _userManager.GetUserAsync(User);
 
             user.FirstName = model.FirstName;
