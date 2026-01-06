@@ -3,17 +3,19 @@
 @inject UserManager<CvSite.Web.Data.Entities.ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "CV Detaljer";
+    ViewData["Title"] = "CV Details";
 }
 
 <div class="container mt-5">
     <div class="p-4 mb-4 bg-white border border-primary rounded shadow-sm" style="border-width: 2px !important;">
-        <h5 class="mb-3 fw-bold text-primary">Hantera ditt CV</h5>
+        <h5 class="mb-3 fw-bold text-primary">Manage your CV</h5>
         <div class="d-flex flex-wrap gap-2">
-            <a asp-controller="Cv" asp-action="Edit" class="btn btn-primary shadow-sm">Redigera Profil</a>
-            <a asp-controller="Competences" asp-action="Create" class="btn btn-success shadow-sm">+ Kompetens</a>
-            <a asp-controller="Educations" asp-action="Create" class="btn btn-success shadow-sm">+ Utbildning</a>
-            <a asp-controller="Experiences" asp-action="Create" class="btn btn-success shadow-sm">+ Erfarenhet</a>
+            <a asp-controller="Profile" asp-action="Edit" class="btn btn-primary shadow-sm">
+                Edit Profile
+            </a>
+            <a asp-controller="Competences" asp-action="Create" class="btn btn-success shadow-sm">+ Competence</a>
+            <a asp-controller="Educations" asp-action="Create" class="btn btn-success shadow-sm">+ Education</a>
+            <a asp-controller="Experiences" asp-action="Create" class="btn btn-success shadow-sm">+ Experience</a>
         </div>
     </div>
 
@@ -42,11 +44,11 @@
         </div>
 
         <div class="col-md-8 ps-md-5">
-            <h3 class="fw-bold border-bottom pb-2 mb-3">Kompetenser</h3>
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Competence</h3>
             <div class="mb-5">
                 @if (!Model.Competences.Any())
                 {
-                    <span class="text-muted italic">Inga kompetenser tillagda ännu.</span>
+                    <span class="text-muted italic">No competences added yet.</span>
                 }
                 @foreach (var comp in Model.Competences)
                 {
@@ -54,11 +56,11 @@
                 }
             </div>
 
-            <h3 class="fw-bold border-bottom pb-2 mb-3">Utbildning</h3>
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Education</h3>
             <div class="mb-5">
                 @if (!Model.Educations.Any())
                 {
-                    <p class="text-muted italic">Ingen utbildning tillagd.</p>
+                    <p class="text-muted italic">No education added yet.</p>
                 }
                 @foreach (var edu in Model.Educations)
                 {
@@ -69,11 +71,11 @@
                 }
             </div>
 
-            <h3 class="fw-bold border-bottom pb-2 mb-3">Erfarenhet</h3>
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Experience</h3>
             <div>
                 @if (!Model.Experiences.Any())
                 {
-                    <p class="text-muted italic">Ingen erfarenhet tillagd.</p>
+                    <p class="text-muted italic">No experiences added yet.</p>
                 }
                 @foreach (var exp in Model.Experiences)
                 {
