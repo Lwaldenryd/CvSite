@@ -17,12 +17,12 @@
     @if (isOwner)
     {
         <div class="p-4 mb-4 bg-white border border-primary rounded shadow-sm" style="border-width: 2px !important;">
-            <h5 class="mb-3 fw-bold text-primary">Hantera ditt CV</h5>
+            <h5 class="mb-3 fw-bold text-primary">Manage your CV</h5>
             <div class="d-flex flex-wrap gap-2">
-                <a asp-controller="Cv" asp-action="Edit" class="btn btn-primary shadow-sm">Redigera Profil</a>
-                <a asp-controller="Competences" asp-action="Create" class="btn btn-success shadow-sm">+ Kompetens</a>
-                <a asp-controller="Educations" asp-action="Create" class="btn btn-success shadow-sm">+ Utbildning</a>
-                <a asp-controller="Experiences" asp-action="Create" class="btn btn-success shadow-sm">+ Erfarenhet</a>
+                <a asp-controller="Profile" asp-action="Edit" class="btn btn-primary shadow-sm">Edit Profil</a>
+                <a asp-controller="Competences" asp-action="Create" class="btn btn-success shadow-sm">+ Competence</a>
+                <a asp-controller="Educations" asp-action="Create" class="btn btn-success shadow-sm">+ Education</a>
+                <a asp-controller="Experiences" asp-action="Create" class="btn btn-success shadow-sm">+ Experience</a>
             </div>
         </div>
     }
