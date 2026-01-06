@@ -1,0 +1,53 @@
+﻿
+@model CvSite.Web.Models.EditProfileViewModel
+
+<h2>Edit Profile</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<form asp-action="Edit" method="post">
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsPrivate" class="form-check-input" />
+        <label asp-for="IsPrivate" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Save changes
+    </button>
+</form>
+
+<hr />
+
+<a asp-area="Identity"
+   asp-page="/Account/Manage/ChangePassword"
+   class="btn btn-link">
+    Change password
+</a>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
