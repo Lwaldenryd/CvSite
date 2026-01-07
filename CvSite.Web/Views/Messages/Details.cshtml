@@ -30,12 +30,12 @@
             </div>
         </div>
         <div class="card-footer text-end">
-            <a asp-action="Index" class="btn btn-secondary">Tillbaka till inkorgen</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to Inbox</a>
 
             @* Om du är mottagaren, visa en Svara-knapp *@
             @if (Model.ReceiverId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
             {
-                <a asp-action="Send" asp-route-receiverId="@Model.SenderId" class="btn btn-success">Svara</a>
+                <a asp-action="Send" asp-route-receiverId="@Model.SenderId" class="btn btn-success">Reply</a>
             }
         </div>
     </div>

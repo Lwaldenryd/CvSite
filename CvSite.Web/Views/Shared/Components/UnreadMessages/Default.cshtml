@@ -1,12 +1,10 @@
-﻿
-@model int
-
-<a class="nav-link position-relative"
-   asp-controller="Messages"
-   asp-action="Index">
+﻿@model int
+<span class="d-inline-flex align-items-center">
     Messages
-
-    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-        @Model
-    </span>
-</a>
+    @if (Model > 0)
+    {
+        <span class="badge rounded-pill bg-danger ms-1 shadow-sm" style="font-size: 0.7rem; line-height: 1; padding: 0.35em 0.5em;">
+            @Model
+        </span>
+    }
+</span>

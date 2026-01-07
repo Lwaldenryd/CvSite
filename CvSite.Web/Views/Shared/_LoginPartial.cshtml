@@ -3,25 +3,33 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+<ul class="navbar-nav align-items-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        var fullName = user != null ? $"{user.FirstName} {user.LastName}" : UserManager.GetUserName(User);
+
+        <li class="nav-item me-2">
+            <span class="navbar-text text-muted small">Logged in as:</span>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link fw-bold text-primary border rounded-pill px-3 bg-light" asp-area="Identity" asp-page="/Account/Manage/Index">
+                @fullName
+            </a>
+        </li>
+        <li class="nav-item ms-3">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+        <li class="nav-item ms-2">
+            <a class="btn btn-primary rounded-pill px-4" asp-area="Identity" asp-page="/Account/Register">Sign Up</a>
+        </li>
+    }
 </ul>

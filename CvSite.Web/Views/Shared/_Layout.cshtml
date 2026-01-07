@@ -11,32 +11,37 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CvSite.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom shadow-sm mb-3 py-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-person-badge me-2"></i>CvSite.Web
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark fw-medium px-3" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Cv" asp-action="MyPage">My Page</a>
+                            <a class="nav-link text-dark fw-medium px-3" asp-controller="Cv" asp-action="MyPage">My Page</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Cv" asp-action="Index">Search CV</a>
+                            <a class="nav-link text-dark fw-medium px-3" asp-controller="Cv" asp-action="Index">Search CV</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Projects" asp-action="Index">Projects</a>
+                            <a class="nav-link text-dark fw-medium px-3" asp-controller="Projects" asp-action="Index">Projects</a>
                         </li>
-
-                        @if (User.Identity?.IsAuthenticated ?? false)
+                        @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                @await Component.InvokeAsync("UnreadMessages")
+                                <a class="nav-link text-dark fw-medium px-3 d-flex align-items-center" asp-controller="Messages" asp-action="Index">
+                                    @await Component.InvokeAsync("UnreadMessages")
+                                </a>
                             </li>
                         }
                     </ul>
@@ -53,7 +58,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - CvSite.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - CvSite - <a asp-area="" asp-controller="Home" asp-action=""></a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

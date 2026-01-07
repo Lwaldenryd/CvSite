@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<CvSite.Web.Data.Entities.ApplicationUser>
 
 @{
-    ViewData["Title"] = "Sök CV";
+    ViewData["Title"] = "Search CV";
 }
 
-<h1>Alla CV-profiler</h1>
+<h1>Alla CV Profiles</h1>
 
 <form asp-action="Index" method="get" class="mb-4">
     <div class="input-group">
-        <input type="text" name="searchString" class="form-control" placeholder="Sök på namn eller kompetens...">
-        <button class="btn btn-primary" type="submit">Sök</button>
+        <input type="text" name="searchString" class="form-control" placeholder="Search by name or competence...">
+        <button class="btn btn-primary" type="submit">Search</button>
     </div>
 </form>
 
@@ -22,7 +22,7 @@
                     <h5 class="card-title">@user.FirstName @user.LastName</h5>
                     <p class="card-text text-muted">@user.Address</p>
 
-                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-primary">Visa fullständigt CV</a>
+                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-primary">View Full CV</a>
                 </div>
             </div>
         </div>
