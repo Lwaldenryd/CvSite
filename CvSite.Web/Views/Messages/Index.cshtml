@@ -26,13 +26,20 @@
                 <td>
                     @if (message.SenderId == currentUserId)
                     {
-                        <span class="badge bg-secondary">Till:</span> 
-                        @message.Receiver?.FirstName @message.Receiver?.LastName
+                        <span class="badge bg-secondary">To:</span>
+                        @message.Receiver.FirstName @message.Receiver.LastName
                     }
                     else
                     {
-                        <span class="badge bg-primary">Från:</span> 
-                        @message.Sender?.FirstName @message.Sender?.LastName
+                        <span class="badge bg-primary">From:</span>
+                        @if (message.Sender != null)
+                        {
+                            @($"{message.Sender.FirstName} {message.Sender.LastName}")
+                        }
+                        else
+                        {
+                            @message.SenderName
+                        }
                     }
                 </td>
                 <td>@message.Subject</td>

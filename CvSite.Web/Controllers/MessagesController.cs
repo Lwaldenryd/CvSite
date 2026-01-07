@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CvSite.Web.Data.Entities;
+using CvSite.Web.Models;
 
 namespace CvSite.Web.Controllers
-{
-    [Authorize]   
+{  
     public class MessagesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,7 +18,8 @@ namespace CvSite.Web.Controllers
             _context = context;
             _userManager = userManager;
         }
-
+        
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             try
@@ -26,7 +27,7 @@ namespace CvSite.Web.Controllers
                 var userId = _userManager.GetUserId(User);
 
                 var Messages = await _context.Messages
-                    .Include(m => m.Sender)
+                    .Include(m => m.Sender!)
                     .Include(m => m.Receiver)
                     .Where(m => m.ReceiverId == userId || m.SenderId == userId)
                     .OrderByDescending(m => m.SentAt)
@@ -40,6 +41,7 @@ namespace CvSite.Web.Controllers
             }
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Send(string receiverId)
         {
             if (string.IsNullOrEmpty(receiverId)) return NotFound();
@@ -49,42 +51,59 @@ namespace CvSite.Web.Controllers
 
             ViewBag.ReceiverName = $"{receiver.FirstName} {receiver.LastName}";
 
-            var message = new Message { ReceiverId = receiverId };
-            return View(message);
+            return View(new SendMessageViewModel
+            {
+                ReceiverId = receiverId 
+            });
         }
 
-        
+
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Send(Message message)
+        public async Task<IActionResult> Send(SendMessageViewModel model)
         {
-           
-            message.SenderId = _userManager.GetUserId(User);
-            message.SentAt = DateTime.Now;
-            message.IsRead = false;
+            var isAuthenticated = User.Identity.IsAuthenticated;
 
-           
-            ModelState.Remove("SenderId");
-            ModelState.Remove("Sender");
-            ModelState.Remove("Receiver");
-            ModelState.Remove("SentAt");
-
-            if (ModelState.IsValid)
+            if (!isAuthenticated && string.IsNullOrWhiteSpace(model.SenderName))
             {
-                _context.Messages.Add(message);
-                await _context.SaveChangesAsync();
-
-                
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("SenderName", "Name is required when sending messages.");
             }
 
-            
-            var receiver = await _userManager.FindByIdAsync(message.ReceiverId);
-            ViewBag.ReceiverName = receiver != null ? $"{receiver.FirstName} {receiver.LastName}" : "Mottagare";
+            if (!ModelState.IsValid) 
+            {
+                var receiver = await _userManager.FindByIdAsync(model.ReceiverId);
+                ViewBag.ReceiverName = receiver != null ? $"{receiver.FirstName} {receiver.LastName}" 
+                    : "Receiver";
 
-            return View(message);
+                return View(model);
+            }
+
+            var message = new Message
+            {
+                ReceiverId = model.ReceiverId,
+                Subject = model.Subject,
+                Content = model.Content,
+                SentAt = DateTime.Now,
+                IsRead = false
+            };
+
+            if (isAuthenticated)
+            {
+                message.SenderId = _userManager.GetUserId(User);
+            }
+            else
+            {
+                message.SenderName = model.SenderName;
+            }
+            
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Cv", new { id = model.ReceiverId });
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> MarkAsRead(int id)
         {
@@ -106,12 +125,13 @@ namespace CvSite.Web.Controllers
             }
         }
 
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
             var userId = _userManager.GetUserId(User);
 
             var message = await _context.Messages
-                .Include(m => m.Sender)
+                .Include(m => m.Sender!)
                 .Include(m => m.Receiver)
                 .FirstOrDefaultAsync(m => m.Id == id);
 

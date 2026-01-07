@@ -6,13 +6,16 @@ namespace CvSite.Web.Data.Entities
     public class Message
     {
         public int Id { get; set; }
+        public string? SenderId { get; set; }
+        public ApplicationUser? Sender { get; set; }
+        
+        [StringLength(50)]
+        public string? SenderName { get; set; }
 
         [Required]
         public string ReceiverId { get; set; }
-
-        [Required]
-        public string SenderId { get; set; }
-
+        public ApplicationUser Receiver { get; set; } 
+        
         [Required]
         [StringLength(200)]
         public string Subject { get; set; }
@@ -23,8 +26,5 @@ namespace CvSite.Web.Data.Entities
         public bool IsRead { get; set; } = false;
 
         public DateTime SentAt { get; set; } = DateTime.Now;
-
-        public virtual ApplicationUser Sender { get; set; }
-        public virtual ApplicationUser Receiver { get; set; }
     }
 }

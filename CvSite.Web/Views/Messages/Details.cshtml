@@ -12,8 +12,17 @@
         </div>
         <div class="card-body">
             <div class="mb-3">
-                <strong>Från:</strong> @Model.Sender?.FirstName @Model.Sender?.LastName <br />
-                <strong>Till:</strong> @Model.Receiver?.FirstName @Model.Receiver?.LastName
+                <strong>From:</strong>
+                @if (Model.Sender != null)
+                {
+                    @($"{Model.Sender.FirstName} {Model.Sender.LastName}")
+                }
+                else
+                {
+                    @Model.SenderName
+                }
+                <br />
+                <strong>To:</strong> @Model.Receiver?.FirstName @Model.Receiver?.LastName
             </div>
             <hr />
             <div class="message-content p-3 bg-light rounded" style="white-space: pre-wrap;">
