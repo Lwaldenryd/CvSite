@@ -55,7 +55,7 @@ namespace CvSite.Web.Controllers
                     _context.Add(education);
                     await _context.SaveChangesAsync();
                     
-                    return RedirectToAction("index", "Home");
+                    return RedirectToAction("MyPage", "Cv");
                 }
                 catch (Exception)
                 {

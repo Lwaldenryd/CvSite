@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CvSite.Web.Data;
+﻿using CvSite.Web.Data;
 using CvSite.Web.Data.Entities;
 using CvSite.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CvSite.Web.Controllers
 {
@@ -29,7 +30,7 @@ namespace CvSite.Web.Controllers
 
             if (!isUserLoggedIn)
             {
-                usersQuery = usersQuery.Where(u => !u.IsPrivate);
+                usersQuery = usersQuery.Where(u => u.IsPrivate == false);
             }
 
             if (!string.IsNullOrEmpty(searchString))
@@ -50,9 +51,16 @@ namespace CvSite.Web.Controllers
                 .Include(u => u.Competences)
                 .Include(u => u.Educations)
                 .Include(u => u.Experiences)
+                //.Include(u => u.ProjectMembers)
+                //.ThenInclude(pm => pm.Project)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null) return NotFound();
+
+            var members = await _context.ProjectMembers
+                 .Include(pm => pm.Project)
+                 .Where(pm => pm.UserId == id)
+                 .ToListAsync();
 
             if (user.IsPrivate && !User.Identity!.IsAuthenticated)
             {
@@ -64,10 +72,34 @@ namespace CvSite.Web.Controllers
                 User = user,
                 Competences = user.Competences.ToList(),
                 Educations = user.Educations.ToList(),
-                Experiences = user.Experiences.ToList()
+                Experiences = user.Experiences.ToList(),
+                ProjectMembers = members
             };
 
             return View(viewModel);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> MyPage()
+        {
+            
+            var userId = _userManager.GetUserId(User);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Challenge();
+            }
+
+            var detailsResult = await Details(userId);
+
+            if (detailsResult is ViewResult viewResult)
+            {
+                
+                viewResult.ViewName = "Details";
+                return viewResult;
+            }
+
+            return detailsResult;
         }
     }
 }

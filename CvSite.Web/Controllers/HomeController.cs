@@ -4,38 +4,41 @@ using CvSite.Web.Data.Entities;
 using CvSite.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CvSite.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _logger = logger;
+            _context = context;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            // 1. Kolla om någon är inloggad
-            var user = await _userManager.GetUserAsync(User);
+            var users = await _userManager.Users
+                .Where(u => !u.IsPrivate)
+                .OrderByDescending(u => u.Id)
+                .Take(4)
+                .ToListAsync();
 
-            if (user != null)
+            var latestProject = await _context.Projects
+                .Include(p => p.Owner)
+                .OrderByDescending(p => p.CreatedAt) 
+                .FirstOrDefaultAsync();
+
+            var viewModel = new HomeIndexViewModel
             {
-                // 2. Om inloggad: Skicka användaren direkt till CvController och Details-metoden
-                return RedirectToAction("Details", "Cv", new { id = user.Id });
-            }
+                FeaturedCvs = users,
+                LatestProject = latestProject
+            };
 
-            // 3. Om INTE inloggad: Visa bara den vanliga välkomstsidan (Home/Index.cshtml)
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -43,5 +46,6 @@ namespace CvSite.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }
