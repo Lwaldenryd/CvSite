@@ -49,7 +49,7 @@ namespace CvSite.Web.Controllers
             var userId = _userManager.GetUserId(User);
             if (userId == null) return Challenge();
 
-            // Kolla om användaren redan är medlem
+            
             var alreadyMember = await _context.ProjectMembers
                 .AnyAsync(pm => pm.ProjectId == projectId && pm.UserId == userId);
 
@@ -104,10 +104,10 @@ namespace CvSite.Web.Controllers
         
         public async Task<IActionResult> Edit(int id)
         {
-            // Find the project in the database
+           
             var project = await _context.Projects.FindAsync(id);
 
-            // Check if project exists and if the current user is the owner
+            
             if (project == null || project.OwnerId != _userManager.GetUserId(User))
             {
                 return Forbid();
@@ -116,19 +116,17 @@ namespace CvSite.Web.Controllers
             return View(project);
         }
 
-        // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Project project)
         {
-            // Security check: Ensure ID matches and user is the owner
             var currentUserId = _userManager.GetUserId(User);
             if (id != project.Id || project.OwnerId != currentUserId)
             {
                 return Forbid();
             }
 
-            // Remove navigation properties from validation to ensure ModelState.IsValid is true
+
             ModelState.Remove("Owner");
             ModelState.Remove("Members");
 
@@ -153,7 +151,6 @@ namespace CvSite.Web.Controllers
                 }
             }
 
-            // If we reach here, something was wrong with the model state
             return View(project);
         }
 

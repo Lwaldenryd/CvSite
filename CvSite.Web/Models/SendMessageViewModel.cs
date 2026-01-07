@@ -15,5 +15,6 @@ namespace CvSite.Web.Models
 
         [Required]
         public string Content { get; set; }
+        
     }
 }
