@@ -1,24 +1,50 @@
-﻿@model CvSite.Web.Data.Entities.Message
+﻿@model CvSite.Web.Models.SendMessageViewModel
 
 <div class="container mt-5">
-    <h2>Skicka meddelande till @ViewBag.ReceiverName</h2>
+    <h2>Send message to @ViewBag.ReceiverName</h2>
 
     <form asp-action="Send" method="post" class="mt-4">
+        @Html.AntiForgeryToken()
+
         <input type="hidden" asp-for="ReceiverId" />
 
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <div class="mb-3">
+                <label asp-for="SenderName" class="form-label"></label>
+                <input asp-for="SenderName" class="form-control" />
+                <span asp-validation-for="SenderName" class="text-danger"></span>
+            </div>
+        }
+        else
+        {
+            <div class="mb-3">
+                <label class="form-label">From</label>
+                <input class="form-control" value="@User.Identity.Name" disabled />
+            </div>
+        }
+
         <div class="mb-3">
-            <label asp-for="Subject" class="form-label">Ämne</label>
-            <input asp-for="Subject" class="form-control" placeholder="Vad gäller det?" />
+            <label asp-for="Subject" class="form-label"></label>
+            <input asp-for="Subject" class="form-control" />
             <span asp-validation-for="Subject" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Content" class="form-label">Meddelande</label>
-            <textarea asp-for="Content" class="form-control" rows="5" placeholder="Skriv ditt meddelande här..."></textarea>
+            <label asp-for="Content" class="form-label"></label>
+            <textarea asp-for="Content" class="form-control" rows="5"></textarea>
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-primary">Skicka</button>
-        <a asp-controller="Cv" asp-action="Index" class="btn btn-secondary">Avbryt</a>
+        <button type="submit" class="btn btn-primary">Send</button>
+        <a asp-controller="Cv" asp-action="Details"
+           asp-route-id="@Model.ReceiverId"
+           class="btn btn-secondary">
+            Cancel
+        </a>
     </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
