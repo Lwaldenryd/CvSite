@@ -27,8 +27,8 @@
             <ul class="list-group">
                 @foreach (var member in Model.Members)
                 {
-
-                    @if (true || isUserLoggedIn) //member.User.IsPublic
+                    @* Logik: Visa om profilen INTE är privat ELLER om besökaren är inloggad *@
+                    @if (!member.User.IsPrivate || isUserLoggedIn)
                     {
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>@member.User.FirstName @member.User.LastName</span>

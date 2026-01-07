@@ -3,12 +3,8 @@
 @inject UserManager<CvSite.Web.Data.Entities.ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "CV Detaljer";
-
-    // 1. Hämta ID på den som surfar på sidan just nu
+    ViewData["Title"] = "CV Details";
     var currentUserId = UserManager.GetUserId(User);
-
-    // 2. Kolla om ID:t på den som surfar matchar ID:t på den profil vi visar
     var isOwner = currentUserId == Model.User.Id;
 }
 
@@ -19,10 +15,11 @@
         <div class="p-4 mb-4 bg-white border border-primary rounded shadow-sm" style="border-width: 2px !important;">
             <h5 class="mb-3 fw-bold text-primary">Manage your CV</h5>
             <div class="d-flex flex-wrap gap-2">
-                <a asp-controller="Profile" asp-action="Edit" class="btn btn-primary shadow-sm">Edit Profil</a>
+                <a asp-controller="Profile" asp-action="Edit" class="btn btn-primary shadow-sm">Edit Profile</a>
                 <a asp-controller="Competences" asp-action="Create" class="btn btn-success shadow-sm">+ Competence</a>
                 <a asp-controller="Educations" asp-action="Create" class="btn btn-success shadow-sm">+ Education</a>
                 <a asp-controller="Experiences" asp-action="Create" class="btn btn-success shadow-sm">+ Experience</a>
+                <a asp-controller="Projects" asp-action="Index" class="btn btn-info text-white shadow-sm">Browse Projects</a>
             </div>
         </div>
     }
@@ -30,12 +27,13 @@
     {
         <div class="mb-4 text-end">
             <a asp-controller="Messages" asp-action="Send" asp-route-receiverId="@Model.User.Id" class="btn btn-outline-dark shadow-sm">
-                ✉️ Skicka meddelande till @(string.IsNullOrEmpty(Model.User.FirstName) ? "användaren" : Model.User.FirstName)
+                ✉️ Send message to @(string.IsNullOrEmpty(Model.User.FirstName) ? "user" : Model.User.FirstName)
             </a>
         </div>
     }
 
     <div class="row">
+        
         <div class="col-md-4">
             <div class="card p-4 shadow-sm border-0 bg-light">
                 @if (Model.User.ProfilePicture != null)
@@ -52,14 +50,16 @@
                     </div>
                 }
 
-                <h2 class="text-center fw-bold">@(string.IsNullOrEmpty(Model.User.FirstName) ? "Namn ej angivet" : Model.User.FirstName + " " + Model.User.LastName)</h2>
+                <h2 class="text-center fw-bold">@(string.IsNullOrEmpty(Model.User.FirstName) ? "Name not provided" : Model.User.FirstName + " " + Model.User.LastName)</h2>
                 <hr />
-                <p><strong>Adress:</strong><br /> @(string.IsNullOrEmpty(Model.User.Address) ? "Ej angiven" : Model.User.Address)</p>
+                <p><strong>Address:</strong><br /> @(string.IsNullOrEmpty(Model.User.Address) ? "Not provided" : Model.User.Address)</p>
                 <p><strong>Email:</strong><br /> @Model.User.Email</p>
             </div>
         </div>
 
+       
         <div class="col-md-8 ps-md-5">
+            
             <h3 class="fw-bold border-bottom pb-2 mb-3">Competence</h3>
             <div class="mb-5">
                 @if (!Model.Competences.Any())
@@ -72,6 +72,7 @@
                 }
             </div>
 
+            
             <h3 class="fw-bold border-bottom pb-2 mb-3">Education</h3>
             <div class="mb-5">
                 @if (!Model.Educations.Any())
@@ -87,8 +88,9 @@
                 }
             </div>
 
+            
             <h3 class="fw-bold border-bottom pb-2 mb-3">Experience</h3>
-            <div>
+            <div class="mb-5">
                 @if (!Model.Experiences.Any())
                 {
                     <p class="text-muted italic">No experiences added yet.</p>
@@ -99,6 +101,39 @@
                         <h5 class="mb-0 fw-bold">@exp.Role</h5>
                         <div class="text-primary fw-bold">@exp.Company</div>
                     </div>
+                }
+            </div>
+
+
+
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Projects</h3>
+            <div class="mb-5">
+                @if (Model.ProjectMembers == null || !Model.ProjectMembers.Any())
+                {
+                    <p class="text-muted italic">Not participating in any projects yet.</p>
+                }
+                else
+                {
+                    @foreach (var membership in Model.ProjectMembers)
+                    {
+                        <div class="mb-3 border-start border-4 border-info ps-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                @* Vi visar bara titeln och eventuell beskrivning snyggt *@
+                                <h5 class="mb-0 fw-bold">@membership.Project?.Title</h5>
+                                @if (!string.IsNullOrEmpty(membership.Project?.Description))
+                                {
+                                    <div class="text-muted small">
+                                        @(membership.Project.Description.Length > 80
+                                                                    ? membership.Project.Description.Substring(0, 80) + "..."
+                                                                    : membership.Project.Description)
+                        </div>
+                                                }
+                            </div>
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@membership.ProjectId" class="btn btn-sm btn-outline-info shadow-sm">
+                                View Project
+                            </a>
+                        </div>
+                    }
                 }
             </div>
         </div>

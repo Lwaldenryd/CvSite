@@ -19,7 +19,54 @@ namespace CvSite.Web.Controllers
             _userManager = userManager;
         }
 
-        // Requirement 10: List all projects
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int id)
+        {
+            var project = await _context.Projects
+                .Include(p => p.Owner)
+                .Include(p => p.Members)
+                    .ThenInclude(pm => pm.User) 
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (project == null) return NotFound();
+
+            bool isUserLoggedIn = User.Identity?.IsAuthenticated ?? false;
+
+            if (!isUserLoggedIn)
+            {
+                
+                project.Members = project.Members.Where(m => !m.User.IsPrivate).ToList();
+            }
+
+            return View(project);
+        }
+
+       
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Join(int projectId)
+        {
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Challenge();
+
+            // Kolla om användaren redan är medlem
+            var alreadyMember = await _context.ProjectMembers
+                .AnyAsync(pm => pm.ProjectId == projectId && pm.UserId == userId);
+
+            if (!alreadyMember)
+            {
+                var membership = new ProjectMember
+                {
+                    ProjectId = projectId,
+                    UserId = userId
+                };
+                _context.ProjectMembers.Add(membership);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Details), new { id = projectId });
+        }
+
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
@@ -30,10 +77,10 @@ namespace CvSite.Web.Controllers
             return View(projects);
         }
 
-        // Requirement 8: Create Project (GET)
+        
         public IActionResult Create() => View();
 
-        // Requirement 8: Create Project (POST)
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Project project)
@@ -53,29 +100,66 @@ namespace CvSite.Web.Controllers
             return View(project);
         }
 
-        // Requirement 9: Edit own projects
+
+        
         public async Task<IActionResult> Edit(int id)
         {
+            // Find the project in the database
             var project = await _context.Projects.FindAsync(id);
+
+            // Check if project exists and if the current user is the owner
             if (project == null || project.OwnerId != _userManager.GetUserId(User))
+            {
                 return Forbid();
+            }
 
             return View(project);
         }
 
+        // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Project project)
+        public async Task<IActionResult> Edit(int id, Project project)
         {
-            if (project.OwnerId != _userManager.GetUserId(User)) return Forbid();
+            // Security check: Ensure ID matches and user is the owner
+            var currentUserId = _userManager.GetUserId(User);
+            if (id != project.Id || project.OwnerId != currentUserId)
+            {
+                return Forbid();
+            }
+
+            // Remove navigation properties from validation to ensure ModelState.IsValid is true
+            ModelState.Remove("Owner");
+            ModelState.Remove("Members");
 
             if (ModelState.IsValid)
             {
-                _context.Update(project);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Update(project);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProjectExists(project.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
+
+            // If we reach here, something was wrong with the model state
             return View(project);
+        }
+
+        private bool ProjectExists(int id)
+        {
+            return _context.Projects.Any(e => e.Id == id);
         }
     }
 }

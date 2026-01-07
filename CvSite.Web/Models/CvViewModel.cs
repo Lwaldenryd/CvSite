@@ -8,6 +8,6 @@ namespace CvSite.Web.Models
         public List<Competence> Competences { get; set; } = new();
         public List<Education> Educations { get; set; } = new();
         public List<Experience> Experiences { get; set; } = new();
-        // Här lägger du även till projekt senare [cite: 77]
+        public List<ProjectMember> ProjectMembers { get; set; } = new();
     }
 }

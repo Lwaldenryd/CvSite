@@ -4,6 +4,7 @@ using CvSite.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CvSite.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260107100733_AddProjectMembersToUser")]
+    partial class AddProjectMembersToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,11 +226,8 @@ namespace CvSite.Web.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SenderId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SenderName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime2");
@@ -478,7 +478,8 @@ namespace CvSite.Web.Migrations
                     b.HasOne("CvSite.Web.Data.Entities.ApplicationUser", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Receiver");
 

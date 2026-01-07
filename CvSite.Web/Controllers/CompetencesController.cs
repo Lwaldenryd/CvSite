@@ -40,15 +40,12 @@ namespace CvSite.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name")] Competence competence)
         {
-            // 1. Hämta nuvarande användar-ID 
             var currentUserId = _userManager.GetUserId(User);
 
             if (currentUserId == null) return Challenge();
 
-            // 2. Tilldela ID:t manuellt
             competence.ApplicationUserId = currentUserId;
 
-            // 3. TA BORT valideringsfel för fält vi sätter manuellt
             ModelState.Remove("ApplicationUserId");
             ModelState.Remove("ApplicationUser");
 
@@ -58,7 +55,7 @@ namespace CvSite.Web.Controllers
                 {
                     _context.Add(competence);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("index", "Home");
+                    return RedirectToAction("MyPage", "Cv");
                 }
                 catch (Exception ex)
                 {
