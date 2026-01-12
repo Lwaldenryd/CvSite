@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CvSite.Web.Migrations
+namespace CvSite.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

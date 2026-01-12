@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace CvSite.Web.Migrations
+namespace CvSite.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddSenderNameToMessages : Migration

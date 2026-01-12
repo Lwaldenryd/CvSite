@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CvSite.Web.Migrations
+namespace CvSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260107102855_AddSenderNameToMessages")]
