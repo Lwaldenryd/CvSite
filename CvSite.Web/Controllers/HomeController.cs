@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using CvSite.Web.Data;
-using CvSite.Web.Data.Entities;
+using CvSite.Data;
+using CvSite.Data.Entities;
 using CvSite.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

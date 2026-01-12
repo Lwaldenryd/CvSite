@@ -1,4 +1,4 @@
-﻿using CvSite.Web.Data.Entities;
+﻿using CvSite.Data.Entities;
 
 namespace CvSite.Web.Models
 {

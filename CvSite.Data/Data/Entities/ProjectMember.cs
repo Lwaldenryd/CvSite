@@ -1,4 +1,4 @@
-﻿namespace CvSite.Web.Data.Entities
+﻿namespace CvSite.Data.Entities
 {
     public class ProjectMember
     {

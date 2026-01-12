@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace CvSite.Web.Data.Entities
+namespace CvSite.Data.Entities
 
 
 {

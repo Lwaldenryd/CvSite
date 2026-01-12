@@ -1,5 +1,5 @@
-using CvSite.Web.Data;
-using CvSite.Web.Data.Entities;
+using CvSite.Data;
+using CvSite.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using CvSite.Web.Data.Entities;
+using CvSite.Data.Entities;
 
-namespace CvSite.Web.Data
+namespace CvSite.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

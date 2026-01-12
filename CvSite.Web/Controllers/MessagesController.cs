@@ -1,9 +1,9 @@
-﻿using CvSite.Web.Data;
+﻿using CvSite.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CvSite.Web.Data.Entities;
+using CvSite.Data.Entities;
 using CvSite.Web.Models;
 
 namespace CvSite.Web.Controllers
